@@ -1,22 +1,10 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { Wish } from '../../wishes/entities/wish.entity';
+import { Offer } from '../../offers/entities/offer.entity';
+import { Essence } from '../../entities/essence.entity';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
+export class User extends Essence {
   @Column({ unique: true })
   username: string;
 
@@ -31,4 +19,10 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Wish, (wish) => wish.owner)
+  wishes: Wish[];
+
+  @OneToMany(() => Offer, (offer) => offer.user)
+  offers: Offer[];
 }
