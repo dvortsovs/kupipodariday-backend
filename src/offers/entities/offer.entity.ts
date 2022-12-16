@@ -11,7 +11,7 @@ export class Offer extends Essence {
   @Column({ default: false })
   hidden: boolean;
 
-  @ManyToOne(() => User, (user) => user.offers)
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 
   @ManyToOne(() => Wish, (wish) => wish.offers)

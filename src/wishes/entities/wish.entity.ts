@@ -20,10 +20,10 @@ export class Wish extends Essence {
   @Column()
   price: number;
 
-  @Column()
+  @Column({ default: 0 })
   copied: number;
 
-  @Column()
+  @Column({ default: 0 })
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
