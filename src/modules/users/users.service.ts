@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,22 +13,45 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async getUser() {
+  async getAllUsers() {
     return this.userRepository.find();
   }
 
   async getUserById(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
-    return user;
+    return await this.userRepository.findOneBy({ id });
   }
 
   async getUserByUsername(username: string) {
-    const user = await this.userRepository.findOneBy({ username });
-    return user;
+    return await this.userRepository.findOneBy({ username });
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const user = await this.userRepository.save(createUserDto);
-    return user;
+  async findMany({ query }: SearchUserDto) {
+    return await this.userRepository.find({
+      where: [{ email: query }, { username: query }],
+    });
+  }
+
+  async remove(id: number) {
+    return await this.userRepository.delete({ id });
+  }
+
+  async update(id: number, userDto: CreateUserDto) {
+    return await this.userRepository.update(
+      { id },
+      { ...userDto, updatedAt: new Date() },
+    );
+  }
+
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const hash = await bcrypt.hash(createUserDto.password, 10);
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password: hash,
+      });
+      return await this.userRepository.save(user);
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
   }
 }

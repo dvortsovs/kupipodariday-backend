@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { WishesService } from './wishes.service';
 import { CreateWishDto } from './dto/create-wish.dto';
 import { JwtGuard } from '../../guards/jwt.guard';
@@ -7,15 +16,15 @@ import { JwtGuard } from '../../guards/jwt.guard';
 export class WishesController {
   constructor(private wishesService: WishesService) {}
 
-  @Get()
-  getWishes() {
-    return this.wishesService.findAll();
-  }
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtGuard)
   @Post()
   createWish(@Body() wishDto: CreateWishDto, @Req() req) {
-    const wish = { ...wishDto, user: req.user.id };
-    return this.wishesService.createWish(wish);
+    return this.wishesService.create(req.user, wishDto);
+  }
+
+  @Get('/last')
+  findLastWish() {
+    return this.wishesService.findLast();
   }
 }

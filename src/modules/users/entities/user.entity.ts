@@ -4,6 +4,7 @@ import { Offer } from '../../offers/entities/offer.entity';
 import { Instance } from '../../../entities/instance.entity';
 import { IsEmail, IsUrl, Length } from 'class-validator';
 import { Wishlist } from '../../wishlists/entities/wishlist.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends Instance {
@@ -23,6 +24,7 @@ export class User extends Instance {
   @IsEmail()
   email: string;
 
+  @Exclude()
   @Column()
   @Length(2, 20)
   password: string;
