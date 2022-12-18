@@ -1,29 +1,39 @@
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Offer } from '../../offers/entities/offer.entity';
-import { Essence } from '../../entities/essence.entity';
+import { Instance } from '../../../entities/instance.entity';
+import { IsNumber, IsOptional, IsUrl, Length } from 'class-validator';
 
 @Entity()
-export class Wish extends Essence {
+export class Wish extends Instance {
   @Column()
+  @Length(1, 250)
   name: string;
 
   @Column()
+  @IsUrl({}, { message: 'Должно быть ссылкой' })
   link: string;
 
   @Column()
+  @IsUrl({}, { message: 'Должно быть ссылкой' })
   image: string;
 
   @Column()
+  @Length(1, 1024)
   description: string;
 
-  @Column()
+  @Column({
+    scale: 2,
+  })
+  @IsNumber()
   price: number;
 
   @Column({ default: 0 })
+  @IsOptional()
   copied: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, scale: 2 })
+  @IsOptional()
   raised: number;
 
   @ManyToOne(() => User, (user) => user.wishes)
