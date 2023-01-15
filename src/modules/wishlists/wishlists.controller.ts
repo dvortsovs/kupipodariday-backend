@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -46,5 +47,11 @@ export class WishlistsController {
     @Body() createWishlistDto: CreateWishlistDto,
   ) {
     return this.wishlistsService.update(Number(id), createWishlistDto);
+  }
+
+  @UseGuards(JwtGuard)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.wishlistsService.delete(Number(id));
   }
 }

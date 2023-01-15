@@ -1,8 +1,8 @@
 {
   "name": "kupipodariday-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "backend for kupipodariday project",
+  "author": "Dvortsov Sevastyan",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

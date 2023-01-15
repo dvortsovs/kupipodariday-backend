@@ -39,7 +39,7 @@ export class WishesService {
         owner: { wishes: true, wishlists: true, offers: true },
         offers: { user: true },
       },
-      take: 20,
+      take: 10,
       order: { copied: 'DESC' },
     });
   }
